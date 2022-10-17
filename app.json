@@ -3,6 +3,12 @@
     "name": "my-app",
     "slug": "my-app",
     "version": "1.0.0",
+    "splash": {
+      "image": "./src/assets/space2.png",
+      "resizeMode": "cover",
+      "backgroundColor":"#000000"
+      
+     },
     "assetBundlePatterns": [
       "**/*"
     ]
