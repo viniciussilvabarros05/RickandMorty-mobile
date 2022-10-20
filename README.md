@@ -1,5 +1,5 @@
 # Rickpédia-mobile
-<a href="">Faça o Download e experimente</a>
+<a href="https://expo.dev/artifacts/eas/ufnFiQMTXsHQXx7pzVm3KW.apk">Faça o Download e experimente</a>
 
 ## Imagens do App
 
