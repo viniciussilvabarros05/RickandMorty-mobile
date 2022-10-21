@@ -5,6 +5,7 @@ import { useTheme } from "styled-components";
 import { DataProps } from "../../@types/data/data";
 import { api } from "../../axios/axios";
 import { Modal } from "../../components/modal/modal";
+import { TableRow } from "./Row";
 import {
   Container,
   Search,
@@ -25,40 +26,68 @@ export function Episodes() {
   const [data, setData] = useState<DataProps[]>([] as any);
   const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(1);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [empty, setEmpty] = useState(false);
   const [character, setCharacter] = useState<DataProps | null>(null);
   const theme = useTheme();
   function HandleSearch(search: string, filter?: number) {
     setIsLoading(true);
-    let query = `/episode/`
-    if(Number(search)){
-      query = `/episode/${search}`
+    let query = `/episode/`;
+    if (Number(search)) {
+      query = `/episode/${search}`;
     }
     api
       .get(query, {
         params: {
-          page: page,
           name: search,
         },
       })
       .then((response) => {
-        if(!response.data.hasOwnProperty('results')){
-          setData([response.data])
-          setIsLoading(false) 
-          return
+        if (!response.data.hasOwnProperty("results")) {
+          setData([response.data]);
+          setIsLoading(false);
+          return;
         }
         setData(response?.data?.results);
         setIsLoading(false);
       })
       .catch((error) => {
-        console.log(error);
+
         setIsLoading(false);
         setData([]);
       });
   }
+  function loadMore() {
+    if (empty) {
+      return;
+    }
+    if(search){
+      return; 
+    }
+    setIsLoadingMore(true);
+    setPage(page + 1);
+    let query = `/episode/`;
 
+    api
+      .get(query, {
+        params: {
+          page: page + 1,
+        },
+      })
+      .then((response) => {
+        setData([...data, ...response?.data?.results]);
+        setIsLoadingMore(false);
+      })
+      .catch((error) => {
+        setIsLoadingMore(false);
+        setEmpty(true);
+      });
+  }
   useFocusEffect(
     useCallback(() => {
       setData([]);
+      setEmpty(false);
+      setPage(1);
       HandleSearch("");
     }, [])
   );
@@ -80,24 +109,22 @@ export function Episodes() {
         </SearchWrapper>
       </Header>
       <Main>
-       
         {isLoading ? (
           <LoadingWrapper>
             <ActivityIndicator size={"large"} color={theme.color.green300} />
-          </LoadingWrapper> 
+          </LoadingWrapper>
         ) : (
-            <TableList
+          <TableList
             data={data}
             keyExtractor={(data) => String(data.id)}
-            renderItem={({ item }) => (
-                <Row onPress={() => setCharacter(item)}>
-                    <Episode>{item?.id}</Episode>
-                    <Name>{item?.name}</Name>
-                    <Date>{item?.air_date}</Date>
-                </Row>
-            )}
-            />
-        )}
+            onEndReached={loadMore}
+            onEndReachedThreshold={0.1}
+            renderItem={({ item }) => <TableRow item={item}/>}
+          />
+        )} 
+      {isLoadingMore && !isLoading ? (
+            <ActivityIndicator size={"large"} color={theme.color.green300} />
+        ):""}
       </Main>
       <Modal data={character} closeModal={setCharacter} />
     </Container>
