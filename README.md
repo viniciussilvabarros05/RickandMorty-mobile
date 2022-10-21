@@ -1,5 +1,5 @@
 # Rickpédia-mobile
-<a href="https://exp-shell-app-assets.s3.us-west-1.amazonaws.com/android/%40viniciussb05/my-app-23ce3854ca8640f3b8de0473d1afd010-signed.apk">Faça o Download e experimente</a>
+<a href="https://exp-shell-app-assets.s3.us-west-1.amazonaws.com/android/%40viniciussb05/my-app-0b203f90cb3d4a1aa2773a7a5e6fc043-signed.apk">Faça o Download e experimente</a>
 
 ## Imagens do App
 
